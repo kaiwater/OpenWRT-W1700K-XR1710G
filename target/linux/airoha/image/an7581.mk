@@ -110,10 +110,10 @@ define Device/gemtek_w1700k-ubi
        the end of flash. A reinstall including corrected chainloader is needed.
   DEVICE_PACKAGES := fitblk \
   		    airoha-en7581-mt7996-npu-firmware \
-			-airoha-en7581-npu-firmware \
+  		    -airoha-en7581-npu-firmware \
 		    kmod-hwmon-nct7802 kmod-mt7996-firmware \
-		    rtl826x-firmware rtl8261c-firmware
-			apk-mbedtls \
+		    rtl826x-firmware rtl8261c-firmware \
+		    apk-mbedtls \
 		    luci \
 		    luci-app-firewall \
 		    luci-app-package-manager \
@@ -164,7 +164,7 @@ define Device/gemtek_xr1710g-ubi
        the end of flash. A reinstall including corrected chainloader is needed.
   DEVICE_PACKAGES := fitblk \
   		    airoha-en7581-mt7996-npu-firmware \
-			-airoha-en7581-npu-firmware \
+  		    -airoha-en7581-npu-firmware \
 		    kmod-hwmon-nct7802 kmod-mt7996-firmware \
 		    rtl826x-firmware \
 		    -rtl8261c-firmware \
