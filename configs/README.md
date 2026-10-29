@@ -19,6 +19,22 @@ make defconfig
 
 `make defconfig` 会补齐依赖并丢弃当前源码树里不存在的符号。
 
+seed 里已启用 `CONFIG_DEVEL=y` + `CONFIG_CCACHE=y`，ccache 目录默认为源码树下的 `.ccache`。
+
+## GitHub Actions
+
+`.github/workflows/build-firmware.yml` 会在 push 到 `ubi2`（`configs/**`、`feeds.conf.default` 变化）或手动触发时编译固件：
+
+```sh
+gh workflow run build-firmware.yml --ref ubi2
+```
+
+缓存策略：
+
+- `dl/` 与 `.ccache/` 在 checkout 后立即恢复，早于依赖安装和编译；
+- ccache 从 toolchain 阶段开始生效（`CCACHE_COMPILERCHECK=content`，toolchain 重建不会失效）；
+- 编译失败也会保存缓存（`if: always()`），方便连续试错。
+
 ## Feeds 说明
 
 | Feed | 用途 |
