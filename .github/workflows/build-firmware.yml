@@ -33,6 +33,7 @@ jobs:
       CCACHE_NOHASHDIR: true
       CCACHE_COMPRESS: true
       CCACHE_MAXSIZE: 2G
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
 
     steps:
       - name: Free disk space
@@ -95,7 +96,29 @@ jobs:
       - name: Build
         run: |
           set -o pipefail
-          make -j"$(nproc)" 2>&1 | tee build.log
+          make -j"$(nproc)" BUILD_LOG=1 2>&1 | tee build.log
+
+      - name: Diagnose image build
+        if: failure()
+        run: |
+          set +e
+          {
+            echo "=== make target/install V=s ==="
+            make target/install V=s 2>&1 | tail -400
+            echo
+            echo "=== make -C target/linux install V=s ==="
+            make -C target/linux install V=s 2>&1 | tail -200
+            echo
+            echo "=== disk ==="
+            df -h
+            echo
+            echo "=== bin ==="
+            find bin -maxdepth 4 -type f 2>/dev/null | head -50
+          } > diagnostics.log 2>&1
+
+      - name: Archive build logs
+        if: always()
+        run: tar czf logs.tar.gz logs 2>/dev/null || true
 
       - name: ccache stats
         if: always()
@@ -118,6 +141,7 @@ jobs:
           key: dl-${{ hashFiles('feeds.conf.default') }}
 
       - name: Upload firmware
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: xr1710g-firmware
@@ -131,11 +155,14 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Upload build log
+      - name: Upload diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: build-log
-          path: build.log
+          name: build-diagnostics
+          path: |
+            build.log
+            diagnostics.log
+            logs.tar.gz
           if-no-files-found: ignore
           retention-days: 7
