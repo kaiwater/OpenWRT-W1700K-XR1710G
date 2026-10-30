@@ -329,12 +329,14 @@ define Image/mkfs/targz
 		-C $(call mkfs_target_dir,$(1)) . | gzip -9n > $@
 endef
 
+MANIFEST_DIR := $(if $(TARGET_PER_DEVICE_ROOTFS),$(TARGET_DIR_ORIG),$(TARGET_DIR))
+
 define Image/Manifest
 	$(if $(CONFIG_USE_APK), \
-		$(call apk,$(TARGET_DIR_ORIG)) list --quiet --manifest --no-network \
+		$(call apk,$(MANIFEST_DIR)) list --quiet --manifest --no-network \
 			--repositories-file /dev/null | sort | sed 's/ / - /'  > \
 			$(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).manifest, \
-		$(call opkg,$(TARGET_DIR_ORIG)) list-installed > \
+		$(call opkg,$(MANIFEST_DIR)) list-installed > \
 			$(BIN_DIR)/$(IMG_PREFIX)$(if $(PROFILE_SANITIZED),-$(PROFILE_SANITIZED)).manifest \
 	)
 ifneq ($(CONFIG_JSON_CYCLONEDX_SBOM),)
