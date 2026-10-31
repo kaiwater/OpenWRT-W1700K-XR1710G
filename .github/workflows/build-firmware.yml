@@ -96,13 +96,20 @@ jobs:
       - name: Build
         run: |
           set -o pipefail
-          make -j"$(nproc)" BUILD_LOG=1 2>&1 | tee build.log
+          if ! make -j"$(nproc)" BUILD_LOG=1 2>&1 | tee build.log; then
+            echo "=== first make failed; retrying after diagnostics ==="
+            make package/install V=s 2>&1 | tee -a build.log | tail -200
+            make -j"$(nproc)" BUILD_LOG=1 2>&1 | tee -a build.log
+          fi
 
       - name: Diagnose image build
         if: failure()
         run: |
           set +e
           {
+            echo "=== make package/install V=s ==="
+            make package/install V=s 2>&1 | tail -300
+            echo
             echo "=== make target/install V=s ==="
             make target/install V=s 2>&1 | tail -400
             echo
