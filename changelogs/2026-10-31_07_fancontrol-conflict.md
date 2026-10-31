@@ -45,6 +45,10 @@ CONFIG_PACKAGE_luci-app-w1700k-fancontrol=y
 
 119 个 seed 符号全部保留。
 
+## 注意
+
+Run `41052659399` 和 `41199907668` 的镜像是在 `package/install` 失败后，由失败诊断里的 `make target/install` 重建出来的。rootfs 可能缺少冲突点之后安装的包，**不要用于刷机**，以冲突修复后的成功构建为准。
+
 ## 回滚
 
 把上面两行加回 seed（不建议，会再次冲突）。
