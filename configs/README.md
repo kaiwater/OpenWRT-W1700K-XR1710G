@@ -48,6 +48,30 @@ gh workflow run build-firmware.yml --ref ubi2
 
 `imm_luci` / `imm_packages` 与官方 feed 有大量同名包。`scripts/feeds` 先处理官方 feed，已安装的同名包会被跳过，因此 `install -a` 不会覆盖 OpenWrt 主线版本。仍建议在升级上游后检查一次 `git status` 和 `make defconfig` 输出。
 
+## XR1710G 分区布局（重要）
+
+本仓库的 `gemtek_xr1710g-ubi` 使用 `target/linux/airoha/dts/an7581-xr1710g-ubi.dts`：
+
+| 分区 | 起始 | 大小 |
+| --- | --- | --- |
+| vendor | `0x00000000` | 6 MB |
+| chainloader | `0x00600000` | 1 MB |
+| **ubi（系统）** | **`0x00700000`** | `0x1b700000`（到 `0x1be00000`） |
+| reserved_bmt | `0x1be00000` | 到 NAND 末尾 |
+
+- 系统从 **0x700000** 开始，属于本仓库 README 说的 **ubi2.0** 布局
+- 需要对应的 **ubi2.0 chainloader**，不是随意一个 stock chainloader
+- 镜像元数据 `compat_version: 2.0`，与旧 1.0 设备升级时会要求强制/重装
+
+`naoki66/ImmortalWrt-for-Gemtek-brightspeed` 里同名 `gemtek_xr1710g-ubi` 是另一套布局：
+
+| 分区 | 起始 |
+| --- | --- |
+| bl2 | `0x00000000` |
+| **ubi（系统）** | **`0x00020000`** |
+
+那套需要 bl2/fip 新 bootloader，和本仓库的镜像**不能混刷**。两个仓库的镜像文件名都带 `-ubi`，不能只看后缀判断布局，必须以 DTS/实际分区表为准。
+
 ## 未纳入 / 已知限制
 
 - **PON 相关**：`pon_drivers`、`onu_config` 及 `kmod-airoha-xpon`、`airoha-pon*`、`kmod-sfp` 等全部排除。
