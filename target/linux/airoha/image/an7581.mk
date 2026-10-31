@@ -152,7 +152,7 @@ define Device/gemtek_xr1710g-ubi
 		    luci-app-package-manager \
 		    luci-app-airoha-flowsense \
 		    luci-app-airoha-npu \
-		    luci-app-w1700k-fancontrol \
+		    luci-app-airoha-fancontrol \
 		    luci-app-wol \
 		    luci-app-usteer \
 		    -wpad-basic-mbedtls \

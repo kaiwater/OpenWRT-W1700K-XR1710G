@@ -53,5 +53,5 @@ gh workflow run build-firmware.yml --ref ubi2
 - **PON 相关**：`pon_drivers`、`onu_config` 及 `kmod-airoha-xpon`、`airoha-pon*`、`kmod-sfp` 等全部排除。
 - **ImmortalWrt 系统级包**：`default-settings`、`default-settings-chn`、`autocore`、`cpufreq`、`shellsync` 不在 feed 中，且属于系统层，未纳入。
 - **luci-theme-glass**：仓库把 `Makefile` 放在根目录，`scripts/feeds` 的扫描深度不会索引根目录下的包，无法直接作为 feed。需要的话只能手动放进 `package/`。
-- **风扇控制二选一**：`luci-app-airoha-fancontrol` 与设备 profile 自带的 `luci-app-w1700k-fancontrol` 会安装同一组文件（`etc/config/fan`、`etc/init.d/fan`、`luci.fan`、`view/fan/*`），同时选中会导致 `package/install` 报 overwrite 冲突。seed 保留 profile 自带的 `luci-app-w1700k-fancontrol`。
+- **风扇控制二选一**：`luci-app-airoha-fancontrol` 与 `luci-app-w1700k-fancontrol` 会安装同一组文件（`etc/config/fan`、`etc/init.d/fan`、`luci.fan`、`view/fan/*`），不能同时选中。参考 naoki66 的 XR1710G 配置，本仓库把 XR1710G profile 改为使用 `luci-app-airoha-fancontrol`；W1700K profile 仍保留 `luci-app-w1700k-fancontrol`。用这个 seed 编 W1700K 时会冲突，需要改 seed。
 - `simple-obfs-client`、`smartdns-ui` 是旧包名，当前 feed 中可能已不存在；`make defconfig` 会自动丢弃，并用 `luci-app-smartdns` 替代。
