@@ -136,6 +136,8 @@ define Device/gemtek_xr1710g-ubi
   DEVICE_ALT0_MODEL := XR1710G
   DEVICE_ALT0_VARIANT := UBI
   DEVICE_DTS := an7581-xr1710g-ubi
+  DEVICE_IMG_SUFFIX := _0x700000
+  SUPPORTED_DEVICES := gemtek,xr1710g gemtek,xr1710g-ubi
   DEVICE_COMPAT_VERSION := 2.0
   DEVICE_COMPAT_MESSAGE := Partition table has been changed to cooperate \
        with the vendor bootloader with regard to the BMT/BBT partition at \

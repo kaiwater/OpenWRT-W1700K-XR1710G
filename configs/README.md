@@ -60,6 +60,8 @@ gh workflow run build-firmware.yml --ref ubi2
 | reserved_bmt | `0x1be00000` | 到 NAND 末尾 |
 
 - 系统从 **0x700000** 开始，属于本仓库 README 说的 **ubi2.0** 布局
+- 镜像文件名会带布局地址：`...-gemtek_xr1710g-ubi_0x700000-squashfs-sysupgrade.itb`
+- `SUPPORTED_DEVICES` 同时包含 `gemtek,xr1710g` 和 `gemtek,xr1710g-ubi`，方便从当前非 ubi 系统升级
 - 需要对应的 **ubi2.0 chainloader**，不是随意一个 stock chainloader
 - 镜像元数据 `compat_version: 2.0`，与旧 1.0 设备升级时会要求强制/重装
 
