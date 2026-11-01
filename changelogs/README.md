@@ -29,6 +29,7 @@
 | 2026-11-01 | [`2026-11-01_09_xr1710g-layout.md`](2026-11-01_09_xr1710g-layout.md) | 确认 XR1710G 存在 0x700000 / 0x20000 两套布局 |
 | 2026-11-01 | [`2026-11-01_10_fw_env-xr1710g.md`](2026-11-01_10_fw_env-xr1710g.md) | XR1710G `fw_env.config` 必须用 `0x4000` |
 | 2026-11-01 | [`2026-11-01_11_xr1710g-compat-name.md`](2026-11-01_11_xr1710g-compat-name.md) | 兼容 `gemtek,xr1710g`，镜像名加入 `_0x700000` |
+| 2026-11-01 | [`2026-11-01_12_flash-xr1710g.md`](2026-11-01_12_flash-xr1710g.md) | 实际刷机成功记录与 `cd /tmp` 经验 |
 
 ## 当前状态
 
@@ -40,6 +41,7 @@
 - XR1710G 实际布局：UBI `0x700000`，`fit` 卷，reserved BMT，ubi2.0 chainloader
 - 风扇：XR1710G 用 `luci-app-airoha-fancontrol`；W1700K profile 保持 `luci-app-w1700k-fancontrol`
 - U-Boot env：XR1710G 使用 `envsize=0x4000`、`secsize=0x1f000`
+- 设备状态：已刷入 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB，配置保留
 
 ## 关键决策 / 思路
 
@@ -77,10 +79,13 @@
     - `openwrt-airoha-an7581-gemtek_xr1710g-ubi_0x700000-initramfs-recovery.itb`（80,609,280 bytes / 76.9 MiB）
 - 上一个成功 run `41213689379`（`d874329`）已被本次取代；它没有 fw_env 和文件名修正。
 - 中间 run `41254498291`（只含 fw_env 修正）构建失败且没有诊断 artifact，已由 `41260491406` 取代。
+- 刷机状态：已用该镜像升级成功（见 `2026-11-01_12_flash-xr1710g.md`）。设备当前 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB。
 
 ## 重要提醒
 
 - **刷机只使用 Build 成功的 run 的 artifact**；之前 160MB 的失败 run 镜像不要用。
 - 0x700000 镜像只能配 ubi2.0 chainloader；0x20000 镜像（naoki66 `-ubi`）不能混刷。
 - 从当前 `gemtek,xr1710g` 系统升级时，设备名已兼容；compat 2.0 仍可能提示，确认 chainloader/布局后用 `-F`。
+- SSH 升级必须 `cd /tmp` 后再执行 `sysupgrade`；从 `/root` 启动会因 overlay busy 导致卷重建失败（第一次尝试就是这样，`fit` 卷仍停在 79.3MiB）。
+- 如果不想用 `-F`，可以在旧系统执行 `uci set system.@system[0].compat_version='2.0'` 后重试 LuCI。
 - 保留 `/etc/config/ubootenv` 时 `fw_env.config` 可沿用 0x4000；干净安装依赖新镜像里的修正。
