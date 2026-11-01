@@ -33,6 +33,7 @@
 | 2026-11-01 | [`2026-11-01_13_release-xr1710g.md`](2026-11-01_13_release-xr1710g.md) | 发布 GitHub Release `26.11.01_xr1710g` |
 | 2026-11-01 | [`2026-11-01_14_mlo-fix.md`](2026-11-01_14_mlo-fix.md) | 2.4G EHT20 修复 MLO；客户端互操作问题记录 |
 | 2026-11-01 | [`2026-11-01_15_mt76-switch-lowaka.md`](2026-11-01_15_mt76-switch-lowaka.md) | pbodq2 基线下，mt76 同步 naoki66/lowaka |
+| 2026-11-01 | [`2026-11-01_16_fanboy-mt76-analysis.md`](2026-11-01_16_fanboy-mt76-analysis.md) | fanboy 上游 10-28 与 pbodq2 分叉分析 |
 
 ## 当前状态
 
@@ -77,6 +78,9 @@
 
 8. **基线 pbodq2，mt76 跟 naoki66/lowaka 同步**
    naoki66 和 lowaka 的 `package/kernel/mt76` 完全一致：`openwrt/mt76` @ `467ae2e` + 5 个补丁（NPU station removal flush、NPU RX skb device、rate control 等）。pbodq2 原来用 `OpenWRT-fanboy/mt76-firmware` + 另一组 NPU 补丁，iPhone 出现“连一会儿后下行断流”，因此只把 mt76 package 同步到 naoki66/lowaka，target/kernel 仍用 pbodq2。
+
+9. **fanboy 上游与 10-28**
+   fanboy OpenW1700k main 的 mt76 是 `openwrt/mt76` 10-28 + 只有 2 个无关补丁；pbodq2 用的是另一个 `mt76-firmware` fork（10-08 + 9 个 NPU 补丁），相对 fanboy main 已 2053 commits ahead。10-28 相比 10-08 多了 83 个提交，包含 more-data、MLD link、beamforming NSS、add failure 等关键修复；如果当前 10-08 + 5 补丁仍不能解决 iPhone，下一版用 10-28 + 5 补丁。
 
 ## 构建状态
 
