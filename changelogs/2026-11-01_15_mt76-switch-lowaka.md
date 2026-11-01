@@ -1,4 +1,14 @@
-# 2026-11-01 — mt76 切到 lowaka 版本（排查 iPhone 下行问题）
+# 2026-11-01 — mt76 切到 naoki66/lowaka 版本（排查 iPhone 下行问题）
+
+## 决策
+
+继续以 **pbodq2 为基线**，只把 `package/kernel/mt76` 同步到 **naoki66 / lowaka** 使用的版本。
+
+已验证两者完全一致：
+
+- `PKG_SOURCE_URL=https://github.com/openwrt/mt76`
+- `PKG_SOURCE_VERSION=467ae2e3f190baf737e15e318906da0dc7d0ab91`
+- 同一组 5 个补丁
 
 ## 背景
 
@@ -51,6 +61,12 @@ kernel、hostapd、设备树、feeds、seed 均未改。
 - `dl` 缓存：2455 MB
 - 最新 ccache：308 MB（key `ccache-7327...-41260491406`）
 - seed/feeds 未变，restore-keys 可命中；但 build_dir 不缓存，Go 包和打包仍要重跑，预计仍需要约 2-3 小时，不是完全免构建
+
+## 构建
+
+- commit：`620e865 fix(mt76): switch to lowaka openwrt/mt76 NPU patches`
+- run：`41285585828`
+- 结果待定；如果 mt76 补丁应用失败或 NPU API 不兼容，会在 Build 步骤报错
 
 ## 设备侧临时诊断配置
 

@@ -32,6 +32,7 @@
 | 2026-11-01 | [`2026-11-01_12_flash-xr1710g.md`](2026-11-01_12_flash-xr1710g.md) | 实际刷机成功记录与 `cd /tmp` 经验 |
 | 2026-11-01 | [`2026-11-01_13_release-xr1710g.md`](2026-11-01_13_release-xr1710g.md) | 发布 GitHub Release `26.11.01_xr1710g` |
 | 2026-11-01 | [`2026-11-01_14_mlo-fix.md`](2026-11-01_14_mlo-fix.md) | 2.4G EHT20 修复 MLO；客户端互操作问题记录 |
+| 2026-11-01 | [`2026-11-01_15_mt76-switch-lowaka.md`](2026-11-01_15_mt76-switch-lowaka.md) | pbodq2 基线下，mt76 同步 naoki66/lowaka |
 
 ## 当前状态
 
@@ -43,6 +44,7 @@
 - XR1710G 实际布局：UBI `0x700000`，`fit` 卷，reserved BMT，ubi2.0 chainloader
 - 风扇：XR1710G 用 `luci-app-airoha-fancontrol`；W1700K profile 保持 `luci-app-w1700k-fancontrol`
 - U-Boot env：XR1710G 使用 `envsize=0x4000`、`secsize=0x1f000`
+- mt76：已同步 naoki66/lowaka 的 `openwrt/mt76` @ `467ae2e` + 5 个 NPU/RX 补丁；pbodq2 其他部分保持
 - 设备状态：已刷入 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB，配置保留
 - 无线：2.4G `EHT20` + 5G `EHT160`，`ap-mld0` 两个 link 正常；客户端 `4E:5D:25:EE:71:9E` 仍有 MLO 下行互操作问题，建议用 5G 普通 SSID 验证
 - Release：`26.11.01_xr1710g`，https://github.com/kaiwater/OpenWRT-W1700K-XR1710G/releases/tag/26.11.01_xr1710g
@@ -73,6 +75,9 @@
    - `SUPPORTED_DEVICES` 同时接受 `gemtek,xr1710g` 和 `gemtek,xr1710g-ubi`
    - 镜像名带 `_0x700000`，避免和 naoki66 的 0x20000 布局混淆
 
+8. **基线 pbodq2，mt76 跟 naoki66/lowaka 同步**
+   naoki66 和 lowaka 的 `package/kernel/mt76` 完全一致：`openwrt/mt76` @ `467ae2e` + 5 个补丁（NPU station removal flush、NPU RX skb device、rate control 等）。pbodq2 原来用 `OpenWRT-fanboy/mt76-firmware` + 另一组 NPU 补丁，iPhone 出现“连一会儿后下行断流”，因此只把 mt76 package 同步到 naoki66/lowaka，target/kernel 仍用 pbodq2。
+
 ## 构建状态
 
 - 最近成功：run `41260491406`（`9f45f0a`，2026-11-01 01:17 → 04:22，约 3h05m）
@@ -84,6 +89,7 @@
 - 上一个成功 run `41213689379`（`d874329`）已被本次取代；它没有 fw_env 和文件名修正。
 - 中间 run `41254498291`（只含 fw_env 修正）构建失败且没有诊断 artifact，已由 `41260491406` 取代。
 - 刷机状态：已用该镜像升级成功（见 `2026-11-01_12_flash-xr1710g.md`）。设备当前 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB。
+- 当前 run：`41285585828`（`620e865`，mt76 同步 naoki66/lowaka）；构建中。
 - Release：`26.11.01_xr1710g` 已发布（公开下载），assets 含 sysupgrade/recovery/manifest/sha256sums/buildinfo。
 
 ## 重要提醒
