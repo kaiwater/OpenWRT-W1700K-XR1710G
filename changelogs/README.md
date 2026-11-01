@@ -30,6 +30,7 @@
 | 2026-11-01 | [`2026-11-01_10_fw_env-xr1710g.md`](2026-11-01_10_fw_env-xr1710g.md) | XR1710G `fw_env.config` 必须用 `0x4000` |
 | 2026-11-01 | [`2026-11-01_11_xr1710g-compat-name.md`](2026-11-01_11_xr1710g-compat-name.md) | 兼容 `gemtek,xr1710g`，镜像名加入 `_0x700000` |
 | 2026-11-01 | [`2026-11-01_12_flash-xr1710g.md`](2026-11-01_12_flash-xr1710g.md) | 实际刷机成功记录与 `cd /tmp` 经验 |
+| 2026-11-01 | [`2026-11-01_13_release-xr1710g.md`](2026-11-01_13_release-xr1710g.md) | 发布 GitHub Release `26.11.01_xr1710g` |
 
 ## 当前状态
 
@@ -42,6 +43,7 @@
 - 风扇：XR1710G 用 `luci-app-airoha-fancontrol`；W1700K profile 保持 `luci-app-w1700k-fancontrol`
 - U-Boot env：XR1710G 使用 `envsize=0x4000`、`secsize=0x1f000`
 - 设备状态：已刷入 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB，配置保留
+- Release：`26.11.01_xr1710g`，https://github.com/kaiwater/OpenWRT-W1700K-XR1710G/releases/tag/26.11.01_xr1710g
 
 ## 关键决策 / 思路
 
@@ -80,6 +82,7 @@
 - 上一个成功 run `41213689379`（`d874329`）已被本次取代；它没有 fw_env 和文件名修正。
 - 中间 run `41254498291`（只含 fw_env 修正）构建失败且没有诊断 artifact，已由 `41260491406` 取代。
 - 刷机状态：已用该镜像升级成功（见 `2026-11-01_12_flash-xr1710g.md`）。设备当前 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB。
+- Release：`26.11.01_xr1710g` 已发布（公开下载），assets 含 sysupgrade/recovery/manifest/sha256sums/buildinfo。
 
 ## 重要提醒
 
