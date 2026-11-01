@@ -69,12 +69,14 @@
 
 ## 构建状态
 
-- 最近一次成功：run `41213689379`（`d874329`）
-  - `xr1710g-firmware` artifact，sysupgrade ≈ 84 MB，recovery ≈ 77 MB
-  - 该版本已包含 `airoha-fancontrol`，但**尚未包含** fw_env 0x4000 修正和 `_0x700000` 文件名
-- 当前 run：`41260491406`（`9f45f0a`）
-  - 包含：`fw_env` 0x4000、`gemtek,xr1710g` 兼容、`_0x700000` 文件名
-  - 以该 run 成功后的 artifact 为准
+- 最近成功：run `41260491406`（`9f45f0a`，2026-11-01 01:17 → 04:22，约 3h05m）
+  - artifact：`xr1710g-firmware`（160 MB）、`build-diagnostics`（1 MB）
+  - 已包含：`fw_env` 0x4000、`gemtek,xr1710g` 兼容、`_0x700000` 文件名
+  - 镜像：
+    - `openwrt-airoha-an7581-gemtek_xr1710g-ubi_0x700000-squashfs-sysupgrade.itb`（88,101,727 bytes / 84.0 MiB）
+    - `openwrt-airoha-an7581-gemtek_xr1710g-ubi_0x700000-initramfs-recovery.itb`（80,609,280 bytes / 76.9 MiB）
+- 上一个成功 run `41213689379`（`d874329`）已被本次取代；它没有 fw_env 和文件名修正。
+- 中间 run `41254498291`（只含 fw_env 修正）构建失败且没有诊断 artifact，已由 `41260491406` 取代。
 
 ## 重要提醒
 
