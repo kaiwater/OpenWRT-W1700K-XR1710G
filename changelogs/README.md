@@ -31,6 +31,7 @@
 | 2026-11-01 | [`2026-11-01_11_xr1710g-compat-name.md`](2026-11-01_11_xr1710g-compat-name.md) | 兼容 `gemtek,xr1710g`，镜像名加入 `_0x700000` |
 | 2026-11-01 | [`2026-11-01_12_flash-xr1710g.md`](2026-11-01_12_flash-xr1710g.md) | 实际刷机成功记录与 `cd /tmp` 经验 |
 | 2026-11-01 | [`2026-11-01_13_release-xr1710g.md`](2026-11-01_13_release-xr1710g.md) | 发布 GitHub Release `26.11.01_xr1710g` |
+| 2026-11-01 | [`2026-11-01_14_mlo-fix.md`](2026-11-01_14_mlo-fix.md) | 2.4G EHT20 修复 MLO；客户端互操作问题记录 |
 
 ## 当前状态
 
@@ -43,6 +44,7 @@
 - 风扇：XR1710G 用 `luci-app-airoha-fancontrol`；W1700K profile 保持 `luci-app-w1700k-fancontrol`
 - U-Boot env：XR1710G 使用 `envsize=0x4000`、`secsize=0x1f000`
 - 设备状态：已刷入 OpenWrt SNAPSHOT `r0-9f45f0a`，board `gemtek,xr1710g-ubi`，compat 2.0，`fit` 卷 84.0MiB，配置保留
+- 无线：2.4G `EHT20` + 5G `EHT160`，`ap-mld0` 两个 link 正常；客户端 `4E:5D:25:EE:71:9E` 仍有 MLO 下行互操作问题，建议用 5G 普通 SSID 验证
 - Release：`26.11.01_xr1710g`，https://github.com/kaiwater/OpenWRT-W1700K-XR1710G/releases/tag/26.11.01_xr1710g
 
 ## 关键决策 / 思路
@@ -90,5 +92,6 @@
 - 0x700000 镜像只能配 ubi2.0 chainloader；0x20000 镜像（naoki66 `-ubi`）不能混刷。
 - 从当前 `gemtek,xr1710g` 系统升级时，设备名已兼容；compat 2.0 仍可能提示，确认 chainloader/布局后用 `-F`。
 - SSH 升级必须 `cd /tmp` 后再执行 `sysupgrade`；从 `/root` 启动会因 overlay busy 导致卷重建失败（第一次尝试就是这样，`fit` 卷仍停在 79.3MiB）。
+- MLO：2.4G 必须是 `EHT20`，否则 hostapd 报 `mld_ap` 错误、2.4G link 不启动。当前两个 link 正常；特定客户端 `4E:5D:25:EE:71:9E` 仍有下行互操作问题，先用普通 5G SSID `3000M8_` 验证。
 - 如果不想用 `-F`，可以在旧系统执行 `uci set system.@system[0].compat_version='2.0'` 后重试 LuCI。
 - 保留 `/etc/config/ubootenv` 时 `fw_env.config` 可沿用 0x4000；干净安装依赖新镜像里的修正。
